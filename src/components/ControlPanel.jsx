@@ -1,7 +1,9 @@
 import React from 'react';
 import { Sliders, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
 
+// Panel lateral con todos los deslizadores (sliders) para ajustar las variables
 export default function ControlPanel({ functionType, params, setParams, isDiscrete, setIsDiscrete, onReset }) {
+  // Manejador genérico para actualizar el estado cuando se mueve cualquier slider
   const handleChange = (key, value) => {
     setParams(prev => ({ ...prev, [key]: parseFloat(value) }));
   };
@@ -13,12 +15,13 @@ export default function ControlPanel({ functionType, params, setParams, isDiscre
           <Sliders size={18} color="#6366f1" />
           <span>Parámetros</span>
         </div>
+        {/* Botón para reiniciar los valores */}
         <button onClick={onReset} className="btn" style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }} title="Restablecer">
           <RefreshCw size={12} />
         </button>
       </div>
 
-      {/* Switch Discreto vs Continuo */}
+      {/* Switch para pasar de la curva continua a los puntos de muestreo discreto */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.3)', padding: '0.5rem 0.75rem', borderRadius: '10px', marginBottom: '0.75rem' }}>
         <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-muted)' }}>Muestreo:</span>
         <button
@@ -30,7 +33,7 @@ export default function ControlPanel({ functionType, params, setParams, isDiscre
         </button>
       </div>
 
-      {/* Slider: Amplitud A */}
+      {/* Amplitud (común a todas las funciones) */}
       <div className="control-group">
         <div className="control-label-row">
           <span className="control-name">Amplitud (A)</span>
@@ -47,7 +50,7 @@ export default function ControlPanel({ functionType, params, setParams, isDiscre
         />
       </div>
 
-      {/* Sliders específicos por función */}
+      {/* Controles para ondas senoidales y amortiguadas */}
       {(functionType === 'sine' || functionType === 'damped') && (
         <>
           <div className="control-group">
@@ -84,6 +87,7 @@ export default function ControlPanel({ functionType, params, setParams, isDiscre
         </>
       )}
 
+      {/* Tiempo de desplazamiento t0 (escalón, exponencial, pulso) */}
       {(functionType === 'step' || functionType === 'exponential' || functionType === 'pulse') && (
         <div className="control-group">
           <div className="control-label-row">
@@ -102,10 +106,11 @@ export default function ControlPanel({ functionType, params, setParams, isDiscre
         </div>
       )}
 
+      {/* Coeficiente alpha para exponencial y amortiguada */}
       {(functionType === 'exponential' || functionType === 'damped') && (
         <div className="control-group">
           <div className="control-label-row">
-            <span className="control-name">Factor Amortiguador / Exponencial (α)</span>
+            <span className="control-name">Factor Exponencial (α)</span>
             <span className="control-val">{params.alpha}</span>
           </div>
           <input
@@ -120,6 +125,7 @@ export default function ControlPanel({ functionType, params, setParams, isDiscre
         </div>
       )}
 
+      {/* Ancho del pulso D */}
       {functionType === 'pulse' && (
         <div className="control-group">
           <div className="control-label-row">
@@ -138,7 +144,7 @@ export default function ControlPanel({ functionType, params, setParams, isDiscre
         </div>
       )}
 
-      {/* Controles de Rango de Dominio [tMin, tMax] y Muestras N */}
+      {/* Configuración del rango temporal del dominio */}
       <hr style={{ borderColor: 'var(--border-color)', margin: '0.5rem 0' }} />
       <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
         Dominio (Rango y Puntos)

@@ -14,6 +14,7 @@ import PulseChart from './components/charts/PulseChart';
 
 import { generateSignalData } from './utils/signalGenerators';
 
+// Valores por defecto cuando arranca la página
 const DEFAULT_PARAMS = {
   A: 2.0,
   f0: 1.0,
@@ -27,21 +28,26 @@ const DEFAULT_PARAMS = {
 };
 
 export default function App() {
-  const [viewMode, setViewMode] = useState('single'); // 'single' | 'grid'
+  // Estado para alternar entre ver una función sola o la grilla con las 5
+  const [viewMode, setViewMode] = useState('single');
+  // Función activa por defecto (arrancamos con el seno)
   const [activeSignal, setActiveSignal] = useState('sine');
+  // Todos los parámetros ajustables desde los sliders
   const [params, setParams] = useState(DEFAULT_PARAMS);
+  // Switch para ver la curva continua o las muestras discretas
   const [isDiscrete, setIsDiscrete] = useState(false);
 
-  // Calcular vectores de dominio e imagen
+  // useMemo para no recalcular los vectores en cada render innecesario, solo si cambian los parámetros
   const signalData = useMemo(() => {
     return generateSignalData({ ...params, functionType: activeSignal });
   }, [params, activeSignal]);
 
+  // Vuelve los sliders a sus valores iniciales
   const handleResetParams = () => {
     setParams(DEFAULT_PARAMS);
   };
 
-  // Renderizador dinámico del gráfico según la función activa
+  // Elige qué componente de gráfico renderizar según la pestaña activa
   const renderActiveChart = () => {
     switch (activeSignal) {
       case 'step':
@@ -61,14 +67,16 @@ export default function App() {
 
   return (
     <div className="app-container">
+      {/* Encabezado principal */}
       <Header viewMode={viewMode} setViewMode={setViewMode} />
 
       {viewMode === 'single' ? (
         <>
+          {/* Selector de pestañas para cambiar de función */}
           <SignalSelector activeSignal={activeSignal} onSelect={setActiveSignal} />
 
           <div className="workspace-grid">
-            {/* Barra lateral de controles y fórmulas */}
+            {/* Columna izquierda: Ecuación LaTeX y Sliders */}
             <div className="controls-sidebar">
               <FormulaCard functionType={activeSignal} params={params} />
               <ControlPanel
@@ -81,7 +89,7 @@ export default function App() {
               />
             </div>
 
-            {/* Panel Principal: Gráfico Especializado + Inspector de Dominio/Imagen */}
+            {/* Columna derecha: Gráfico y tabla desplegable de vectores */}
             <div className="chart-display-panel">
               <div className="glass-panel" style={{ padding: '1rem', minHeight: '440px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border-color)' }}>
@@ -97,11 +105,13 @@ export default function App() {
                 </div>
               </div>
 
-              <VectorInspector data={signalData} functionType={activeSignal} />
+              {/* Inspector desplegable del dominio (T) y la imagen (X) */}
+              <VectorInspector data={signalData} />
             </div>
           </div>
         </>
       ) : (
+        /* Vista de Dashboard con las 5 gráficas juntas */
         <DashboardGrid
           params={params}
           isDiscrete={isDiscrete}

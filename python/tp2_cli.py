@@ -9,24 +9,29 @@ import matplotlib.pyplot as plt
 
 # --- 1. Definición de Funciones Matemáticas Continuas Digitalizadas ---
 
+# Escalón unitario: da 0 para tiempos anteriores a t0, y A a partir de t0
 def escalon(t, A=2.0, t0=1.0):
     """x(t) = A * mu(t - t0)"""
     return np.where(t >= t0, A, 0.0)
 
+# Senoidal: A * sen(2*pi*f0*t + fase)
 def seno(t, A=2.0, f0=1.0, theta_deg=0.0):
     """x(t) = A * sin(2*pi*f0*t + theta)"""
     theta_rad = np.radians(theta_deg)
     return A * np.sin(2 * np.pi * f0 * t + theta_rad)
 
+# Exponencial: A * e^(alpha * (t - t0))
 def exponencial(t, A=2.0, alpha=-0.5, t0=1.0):
     """x(t) = A * exp(alpha * (t - t0))"""
     return A * np.exp(alpha * (t - t0))
 
+# Señal amortiguada: producto del seno por la caída/crecimiento exponencial
 def senal_amortiguada(t, A=2.0, f0=1.0, theta_deg=0.0, alpha=-0.5):
     """x(t) = A * sin(2*pi*f0*t + theta) * exp(alpha * t)"""
     theta_rad = np.radians(theta_deg)
     return A * np.sin(2 * np.pi * f0 * t + theta_rad) * np.exp(alpha * t)
 
+# Pulso recortado: vale A en el intervalo entre t0 y t0 + D
 def pulso(t, A=2.0, t0=1.0, D=3.0):
     """p(t) = A * [mu(t - t0) - mu(t - t0 - D)]"""
     return np.where((t >= t0) & (t <= t0 + D), A, 0.0)
@@ -35,9 +40,10 @@ def pulso(t, A=2.0, t0=1.0, D=3.0):
 # --- 2. Generación del Dominio (Vector de Tiempo t) ---
 t_min, t_max = -2.0, 8.0
 num_puntos = 300
+# Armo el vector de tiempo t con 300 muestras parejas entre t_min y t_max
 t = np.linspace(t_min, t_max, num_puntos)
 
-# Arreglos de las imágenes
+# Calculo los vectores de salida (imágenes) pasando el vector t a cada función
 x_escalon = escalon(t)
 x_seno = seno(t)
 x_exp = exponencial(t)
@@ -92,7 +98,7 @@ ax3.set_ylabel('x(t)')
 ax3.grid(True, linestyle=':', alpha=0.6)
 ax3.legend()
 
-# Subplot 4: Señal Amortiguada
+# Subplot 4: Señal Amortiguada (agrego las envolventes superior e inferior)
 ax4 = plt.subplot(3, 2, 4)
 envolvente_sup = 2.0 * np.exp(-0.5 * t)
 envolvente_inf = -envolvente_sup
@@ -122,4 +128,3 @@ print("\nMostrando gráfico de Matplotlib con las 5 funciones diferenciadas...")
 plt.savefig('python/graficos_funciones.png', dpi=150)
 print("Gráfico guardado exitosamente en 'python/graficos_funciones.png'")
 plt.show()
-

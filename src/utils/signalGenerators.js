@@ -1,40 +1,36 @@
-/**
- * Módulo de generación de funciones continuas digitalizadas para TP2 - Modelos y Simulación 2026.
- */
+// Lógica matemática para generar los vectores de tiempo e imagen de cada función.
 
-// 1. Escalón Unitario: x(t) = A * mu(t - t0)
+// Escalón unitario: si t es menor a t0 da 0, si t llega o supera t0 se activa en la amplitud A
 export function calculateStep(t, A, t0) {
   return t < t0 ? 0 : A;
 }
 
-// 2. Seno: x(t) = A * sin(2*pi*f0*t + theta)
+// Senoidal clásica: A * sen(2*pi*f0*t + fase)
 export function calculateSine(t, A, f0, thetaRad) {
   return A * Math.sin(2 * Math.PI * f0 * t + thetaRad);
 }
 
-// 3. Exponencial: x(t) = A * exp(alpha * (t - t0))
+// Exponencial: A * e^(alpha * (t - t0))
 export function calculateExponential(t, A, alpha, t0) {
   return A * Math.exp(alpha * (t - t0));
 }
 
-// 4. Señal Amortiguada: x(t) = A * sin(2*pi*f0*t + theta) * exp(alpha * t)
+// Seno amortiguado: junta la oscilación senoidal con la caída o crecimiento exponencial
 export function calculateDampedSine(t, A, f0, thetaRad, alpha) {
   return A * Math.sin(2 * Math.PI * f0 * t + thetaRad) * Math.exp(alpha * t);
 }
 
-// Envolvente para Señal Amortiguada: ± A * exp(alpha * t)
+// Calculo el techo y piso (+A*e^alpha*t y -A*e^alpha*t) para dibujar las líneas punteadas de la envolvente
 export function calculateDampedEnvelope(t, A, alpha) {
   return A * Math.exp(alpha * t);
 }
 
-// 5. Pulso Recortado: p(t) = A * [mu(t - t0) - mu(t - t0 - D)]
+// Pulso cuadrado: vale A únicamente cuando t está metido entre t0 y (t0 + D)
 export function calculatePulse(t, A, t0, D) {
   return (t >= t0 && t <= t0 + D) ? A : 0;
 }
 
-/**
- * Genera los vectores de Dominio (T) e Imagen (X) para una función dada.
- */
+// Función principal que arma los arreglos del dominio (t) y la imagen (x) según los parámetros de los sliders
 export function generateSignalData({
   functionType,
   A = 1,
@@ -47,7 +43,9 @@ export function generateSignalData({
   tMax = 8,
   numPoints = 200
 }) {
+  // Paso la fase de grados a radianes para que Math.sin trabaje bien
   const thetaRad = (thetaDeg * Math.PI) / 180;
+  // Calculo el paso temporal dt entre cada muestra
   const dt = (tMax - tMin) / (numPoints - 1);
 
   const tVector = [];
@@ -55,9 +53,10 @@ export function generateSignalData({
   const envelopeUpper = [];
   const envelopeLower = [];
 
+  // Recorro desde tMin a tMax calculando cada punto
   for (let i = 0; i < numPoints; i++) {
     const t = tMin + i * dt;
-    // Redondear t para evitar errores de precisión de punto flotante en display
+    // Redondeo a 4 decimales para que no se llene de decimales feos en pantalla
     const tRounded = Number(t.toFixed(4));
     tVector.push(tRounded);
 
@@ -87,7 +86,7 @@ export function generateSignalData({
     xVector.push(Number(val.toFixed(4)));
   }
 
-  // Métricas del vector de salida
+  // Saco las métricas básicas de la señal (mínimo, máximo, promedio y valor eficaz RMS)
   const xMin = Math.min(...xVector);
   const xMax = Math.max(...xVector);
   const xPeakPeak = xMax - xMin;
@@ -110,5 +109,3 @@ export function generateSignalData({
     }
   };
 }
-
-
