@@ -4,7 +4,6 @@ import SignalSelector from './components/SignalSelector';
 import ControlPanel from './components/ControlPanel';
 import FormulaCard from './components/FormulaCard';
 import VectorInspector from './components/VectorInspector';
-import DashboardGrid from './components/DashboardGrid';
 
 import StepChart from './components/charts/StepChart';
 import SinePhasorChart from './components/charts/SinePhasorChart';
@@ -28,8 +27,6 @@ const DEFAULT_PARAMS = {
 };
 
 export default function App() {
-  // Estado para alternar entre ver una función sola o la grilla con las 5
-  const [viewMode, setViewMode] = useState('single');
   // Función activa por defecto (arrancamos con el seno)
   const [activeSignal, setActiveSignal] = useState('sine');
   // Todos los parámetros ajustables desde los sliders
@@ -68,59 +65,45 @@ export default function App() {
   return (
     <div className="app-container">
       {/* Encabezado principal */}
-      <Header viewMode={viewMode} setViewMode={setViewMode} />
+      <Header />
 
-      {viewMode === 'single' ? (
-        <>
-          {/* Selector de pestañas para cambiar de función */}
-          <SignalSelector activeSignal={activeSignal} onSelect={setActiveSignal} />
+      {/* Selector de pestañas para cambiar de función */}
+      <SignalSelector activeSignal={activeSignal} onSelect={setActiveSignal} />
 
-          <div className="workspace-grid">
-            {/* Columna izquierda: Ecuación LaTeX y Sliders */}
-            <div className="controls-sidebar">
-              <FormulaCard functionType={activeSignal} params={params} />
-              <ControlPanel
-                functionType={activeSignal}
-                params={params}
-                setParams={setParams}
-                isDiscrete={isDiscrete}
-                setIsDiscrete={setIsDiscrete}
-                onReset={handleResetParams}
-              />
-            </div>
+      <div className="workspace-grid">
+        {/* Columna izquierda: Ecuación LaTeX y Sliders */}
+        <div className="controls-sidebar">
+          <FormulaCard functionType={activeSignal} params={params} />
+          <ControlPanel
+            functionType={activeSignal}
+            params={params}
+            setParams={setParams}
+            isDiscrete={isDiscrete}
+            setIsDiscrete={setIsDiscrete}
+            onReset={handleResetParams}
+          />
+        </div>
 
-            {/* Columna derecha: Gráfico y tabla desplegable de vectores */}
-            <div className="chart-display-panel">
-              <div className="glass-panel" style={{ padding: '1rem', minHeight: '440px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border-color)' }}>
-                  <div style={{ fontWeight: '700', fontSize: '1.1rem', letterSpacing: '-0.01em' }}>
-                    Gráfico
-                  </div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                    t ∈ [{params.tMin}, {params.tMax}] s | Δt: {signalData.dt} s
-                  </div>
-                </div>
-                <div className="chart-canvas-wrapper">
-                  {renderActiveChart()}
-                </div>
+        {/* Columna derecha: Gráfico y tabla desplegable de vectores */}
+        <div className="chart-display-panel">
+          <div className="glass-panel" style={{ padding: '1rem', minHeight: '440px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border-color)' }}>
+              <div style={{ fontWeight: '700', fontSize: '1.1rem', letterSpacing: '-0.01em' }}>
+                Gráfico
               </div>
-
-              {/* Inspector desplegable del dominio (T) y la imagen (X) */}
-              <VectorInspector data={signalData} />
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                t ∈ [{params.tMin}, {params.tMax}] s | Δt: {signalData.dt} s
+              </div>
+            </div>
+            <div className="chart-canvas-wrapper">
+              {renderActiveChart()}
             </div>
           </div>
-        </>
-      ) : (
-        /* Vista de Dashboard con las 5 gráficas juntas */
-        <DashboardGrid
-          params={params}
-          isDiscrete={isDiscrete}
-          onSelectFunction={(fn) => {
-            setActiveSignal(fn);
-            setViewMode('single');
-          }}
-        />
-      )}
+
+          {/* Inspector desplegable del dominio (T) y la imagen (X) */}
+          <VectorInspector data={signalData} />
+        </div>
+      </div>
     </div>
   );
 }
