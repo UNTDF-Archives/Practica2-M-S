@@ -1,14 +1,13 @@
 # Visualizador de Funciones Continuas
 
-Aplicación web interactiva y script de demostración en Python para la digitalización y visualización de funciones continuas (Escalón, Senoidal, Exponencial, Señal Amortiguada y Pulso Recortado).
+Aplicación web interactiva para la digitalización y visualización de funciones continuas (Escalón, Senoidal, Exponencial, Señal Amortiguada y Pulso Recortado).
 
 ## Requisitos Previos
 
 - Node.js (v18 o superior)
-- Python 3 (opcional, para ejecutar el script standalone)
 - Docker (opcional, para despliegue en contenedor)
 
-## Instalación y Ejecución Web
+## Instalación y Ejecución
 
 1. Instalar dependencias:
    ```bash
@@ -24,17 +23,6 @@ Aplicación web interactiva y script de demostración en Python para la digitali
    ```bash
    npm run build
    ```
-
-## Script de Python
-
-Para ejecutar la demostración en Python con Matplotlib:
-
-```bash
-python3 -m venv python/venv
-source python/venv/bin/activate
-pip install -r python/requirements.txt
-python python/tp2_cli.py
-```
 
 ## Ejecución con Docker
 

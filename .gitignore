@@ -11,17 +11,6 @@ dist/
 dist-ssr/
 *.local
 
-# Python y entornos virtuales
-python/venv/
-python/env/
-__pycache__/
-*.py[cod]
-*$py.class
-.pytest_cache/
-
-# Archivos generados dinámicamente
-python/*.png
-
 # IDEs y Editores de código
 .vscode/
 .idea/
