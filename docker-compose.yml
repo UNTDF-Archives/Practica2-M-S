@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  mys-tp2-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mys_tp2_visualizer
+    ports:
+      - "8080:80"
+    restart: unless-stopped
