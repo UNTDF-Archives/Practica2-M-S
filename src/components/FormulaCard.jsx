@@ -8,7 +8,7 @@ export default function FormulaCard({ functionType, params }) {
     const { A, f0, thetaDeg, t0, alpha, D } = params;
     switch (functionType) {
       case 'step':
-        return `x(t) = ${A} \\cdot \\mu(t - ${t0}) \\quad \\text{donde } \\mu(t - t_0) = \\begin{cases} 0 & t < ${t0} \\\\ 1 & t \\ge ${t0} \\end{cases}`;
+        return `x(t) = ${A} \\cdot \\mu(t - ${t0}) = \\begin{cases} 0 & t < ${t0} \\\\ ${A} & t \\ge ${t0} \\end{cases}`;
       case 'sine':
         return `x(t) = ${A} \\cdot \\sin(2\\pi \\cdot ${f0} \\cdot t + ${thetaDeg}^\\circ)`;
       case 'exponential':
