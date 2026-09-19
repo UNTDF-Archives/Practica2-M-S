@@ -26,7 +26,8 @@ export default function FormulaCard({ functionType, params }) {
     if (formulaRef.current) {
       katex.render(getLatexString(), formulaRef.current, {
         throwOnError: false,
-        displayMode: true
+        displayMode: true,
+        output: 'html'
       });
     }
   }, [functionType, params]);

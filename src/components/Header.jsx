@@ -12,6 +12,10 @@ export default function Header() {
           <h1 className="header-title">Visualizador de Funciones Continuas</h1>
         </div>
       </div>
+      <div style={{ textAlign: 'right', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+        <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>Modelos y Simulación 2026</div>
+        <div>Constanza Benedetti &bull; Lucas Araya</div>
+      </div>
     </header>
   );
 }
